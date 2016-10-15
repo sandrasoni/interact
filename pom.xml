@@ -25,6 +25,7 @@
     </properties>
 
     <dependencies>
+        <!-- spring boot deps -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-cassandra</artifactId>
