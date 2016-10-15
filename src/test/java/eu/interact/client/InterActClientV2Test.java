@@ -80,6 +80,7 @@ public class InterActClientV2Test {
         int minimum = 0;
         int maximum = actTypes.length-1;
         int randomNum = minimum + (int)(Math.random() * maximum);
+        return actTypes[randomNum];
     }
 
     private PrivateDelegatedAct getTestActEvent(boolean visibilty, String type, String id) {
