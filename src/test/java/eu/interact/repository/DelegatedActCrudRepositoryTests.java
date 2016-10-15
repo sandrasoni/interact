@@ -6,6 +6,7 @@ import eu.interact.domain.PrivateDelegatedActEvent;
 import eu.interact.domain.PublicDelegatedAct;
 import eu.interact.domain.PublicDelegatedActEvent;
 import eu.interact.util.RequiresCassandraKeyspace;
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -15,8 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.util.Version;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 
 @RunWith(SpringRunner.class)
@@ -101,5 +101,44 @@ public class DelegatedActCrudRepositoryTests {
         PublicDelegatedActEvent evt1 = publicDelegatedActEventRepository.save(de1);
         PublicDelegatedActEvent dbEvt1 = publicDelegatedActEventRepository.findOne(evt1.getId());
         Assert.assertNotNull(dbEvt1);
+    }
+
+    @Test
+    public void testSaveMerge() {
+
+        PublicDelegatedAct act = new PublicDelegatedAct();
+        act.setId("id1");
+        act.setCode("C1");
+        act.setTitle("Title1");
+        act.setType("directive");
+        act.setKeywords(Arrays.asList("key1", "key2"));
+        act.setCreationDate(new Date());
+
+        PublicDelegatedActEvent event1 = new PublicDelegatedActEvent();
+        event1.setId("id1");
+        event1.setName("E1");
+        event1.setDelegatedActId("id1");
+        event1.setCreationDate(new Date());
+        event1.setOriginatingInstitution("EU");
+        event1.setDestinationInstitutions(Arrays.asList("EU1", "EU2"));
+        event1.setKeywords(Arrays.asList("key3", "key4"));
+
+        publicDelegatedActRepository.save(act);
+        PublicDelegatedAct dbAct1 = publicDelegatedActRepository.findOne(act.getId());
+        Assert.assertNotNull(dbAct1);
+
+        publicDelegatedActEventRepository.save(event1);
+        PublicDelegatedActEvent dbEvt1 = publicDelegatedActEventRepository.findOne(event1.getId());
+        Assert.assertNotNull(dbEvt1);
+
+        List<String> existingKeywords = new ArrayList<>();
+        existingKeywords.addAll(dbAct1.getKeywords());
+        existingKeywords.addAll(dbEvt1.getKeywords());
+        dbAct1.setKeywords(existingKeywords);
+
+        publicDelegatedActRepository.save(dbAct1);
+
+        PublicDelegatedAct dbAct2 = publicDelegatedActRepository.findOne(dbAct1.getId());
+        Assertions.assertThat(dbAct2.getKeywords()).isEqualTo(Arrays.asList("key1", "key2", "key3", "key4"));
     }
 }

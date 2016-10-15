@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS delegated_act_event_private (
     delegated_act_id text,
     originating_institution text,
     destination_institution set<text>,
+    keywords set<text>,
     name text,
     visibility boolean,
     creation_date timestamp,
@@ -39,6 +40,7 @@ CREATE TABLE IF NOT EXISTS delegated_act_event_private (
     delegated_act_id text,
     originating_institution text,
     destination_institution set<text>,
+    keywords set<text>,
     name text,
     creation_date timestamp,
     PRIMARY KEY(id)

@@ -14,11 +14,10 @@ public class PublicDelegatedActEvent {
     @PrimaryKey("id") String id;
     @Column("delegated_act_id") String delegatedActId;
     @Column("originating_institution") String originatingInstitution;
-    @Column("destination_institution")
-    List<String> destinationInstitutions;
+    @Column("destination_institution") List<String> destinationInstitutions;
     @Column("name") String name;
-    @Column("creation_date")
-    Date creationDate;
+    @Column("keywords") private List<String> keywords;
+    @Column("creation_date") Date creationDate;
 
     public String getId() {
         return id;
@@ -66,5 +65,13 @@ public class PublicDelegatedActEvent {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public List<String> getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(List<String> keywords) {
+        this.keywords = keywords;
     }
 }
