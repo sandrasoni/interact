@@ -8,7 +8,7 @@ package eu.interact.web.endpoint2;
 import eu.interact.domain.DelegatedAct2;
 import eu.interact.domain.PrivateDelegatedAct;
 import eu.interact.domain.PublicDelegatedAct;
-import eu.interact.repository.PrivateDeletegatedActCrudRepository;
+import eu.interact.repository.PrivateDeletegatedActRepository;
 import eu.interact.web.DelegatedActService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

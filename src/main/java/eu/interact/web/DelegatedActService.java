@@ -2,7 +2,7 @@ package eu.interact.web;
 
 import eu.interact.domain.PrivateDelegatedAct;
 import eu.interact.domain.PublicDelegatedAct;
-import eu.interact.repository.PrivateDeletegatedActCrudRepository;
+import eu.interact.repository.PrivateDeletegatedActRepository;
 import eu.interact.repository.PublicDelegatedActRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,14 +11,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by martin_mac on 15/10/16.
- */
 @Service
 public class DelegatedActService {
 
     @Autowired
-    PrivateDeletegatedActCrudRepository privateActRepository;
+    PrivateDeletegatedActRepository privateActRepository;
 
     @Autowired
     PublicDelegatedActRepository publicActRepository;

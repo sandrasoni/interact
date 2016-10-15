@@ -29,7 +29,7 @@ public class DelegatedActCrudRepositoryTests {
     public final static RequiresCassandraKeyspace CASSANDRA_KEYSPACE = RequiresCassandraKeyspace.onLocalhost();
 
     @Autowired
-    PrivateDeletegatedActCrudRepository privateDeletegatedActCrudRepository;
+    PrivateDeletegatedActRepository privateDeletegatedActCrudRepository;
     @Autowired
     PrivateDelegatedActEventRepository privateDelegatedActEventRepository;
 
@@ -140,5 +140,11 @@ public class DelegatedActCrudRepositoryTests {
 
         PublicDelegatedAct dbAct2 = publicDelegatedActRepository.findOne(dbAct1.getId());
         Assertions.assertThat(dbAct2.getKeywords()).isEqualTo(Arrays.asList("key1", "key2", "key3", "key4"));
+    }
+
+    @Test
+    public void testSearch() {
+
+
     }
 }
