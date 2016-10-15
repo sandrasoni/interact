@@ -1,5 +1,6 @@
 var actJsonformat = JSON.parse('{"act":[{"id":1088102,"code":"1","title":"This is the act 1","keywords":["Agriculture","Spain"],"visibility":"public","type":"directive","event":[{"id":1,"originating_institution":"Commission","destination_institution":["Parliament","Council"],"name":"startProcess","date":"01/01/2016","visibility":"public"}]},{"id":1088103,"code":"2","title":"This is the act 2","keywords":["Fisheries","Ireland"],"visibility":"public","type":"decision","event":[{"id":3,"originating_institution":"Commission","destination_institution":["Parliament","Council"],"name":"adoption","date":"01/02/2016","visibility":"public"}]},{"id":1088104,"code":"3","title":"This is the act 3","keywords":["IT","internal"],"visibility":"private","type":"delegatedAct","event":[{"id":4,"originating_institution":"Parliament","destination_institution":["Parliament"],"name":"plenary","date":"01/03/2016","visibility":"private"}]},{"id":1088105,"code":"4","title":"This is the act 3","keywords":["Home affairs","Justice","Treaty"],"visibility":"public","type":"directive","event":[{"id":7,"originating_institution":"Council","destination_institution":["Commission","Council"],"name":"approve","date":"01/04/2016","visibility":"public"}]}]}');
 var actDetailJsonformat = JSON.parse('{"act":[{"id":1088102,"code":"1","title":"This is the act 1","keywords":["Agriculture","Spain"],"visibility":"public","type":"directive","event":[{"id":1,"originating_institution":"Commission","destination_institution":["Parliament","Council"],"name":"startProcess","date":"01/01/2016","visibility":"public"},{"id":2,"originating_institution":"Commission","destination_institution":["Parliament","Council"],"name":"expertGroup","date":"01/03/2016","visibility":"private"}]}]}');
+var USERROLE = 'NONE';
 
 function addRow(act){
     var grid = $("#example");
@@ -27,6 +28,41 @@ function drawTimeline(actId){
 }
 
 $(document).ready(function () {
+    
+    $.ajax({
+            type: "GET",
+            url: "/user",
+            success: function(data) {
+                if (data === 'INSTITUTION') {
+                    $('#loginLinkDetails').empty();
+                    $('#loginLinkDetails').append('<a id="linkDetailLogout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>');
+                    $('#linkDetailLogout').bind("click", function(event) {
+                        $.ajax({
+                            url: "/logout",
+                            success: function() {
+                                window.location.href = "/";
+                            }
+                        });
+                    });
+                    USERROLE = 'INSTITUTION';
+                } else if (data === 'THIRDPARTY') {
+                    $('#loginLinkDetails').empty();
+                    $('#loginLinkDetails').append('<a id="linkDetailLogout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>');
+                    $('#linkDetailLogout').bind("click", function(event) {
+                        $.ajax({
+                            url: "/logout",
+                            success: function() {
+                                window.location.href = "/";
+                            }
+                        });
+                    });
+                    USERROLE = 'THIRDPARTY';
+                } else {
+                    USERROLE = 'NONE';
+                }
+            }
+        });
+    
     //show grid and populate
     $("#searchButton").bind("click", function(){
         $("#grid").show();
@@ -60,6 +96,4 @@ $(document).ready(function () {
             }
         });
     })
-
-
 });
