@@ -88,3 +88,7 @@ div.dataTables_wrapper .d-info div.dataTables_info {
 	padding: 20px 0px 20px 0px;
 }
 
+/*Grid*/
+.grid{
+    display: none;
+}
