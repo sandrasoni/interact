@@ -26,6 +26,7 @@ public class PrivateDelegatedActEvent {
     @Column("destination_institution") List<String> destinationInstitutions;
     @Column("name") String name;
     @Column("creation_date") Date creationDate;
+    @Column("keywords") private List<String> keywords;
     @Column("visibility") boolean visibility;
 
     public String getId() {
@@ -82,5 +83,13 @@ public class PrivateDelegatedActEvent {
 
     public void setVisibility(boolean visibility) {
         this.visibility = visibility;
+    }
+
+    public List<String> getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(List<String> keywords) {
+        this.keywords = keywords;
     }
 }

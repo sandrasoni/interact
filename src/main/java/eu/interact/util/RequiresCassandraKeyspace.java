@@ -64,9 +64,8 @@ public class RequiresCassandraKeyspace extends ExternalResource {
 	 * @return the {@link RequiresCassandraKeyspace} rule
 	 */
 	public static RequiresCassandraKeyspace onRemote() {
-		return new RequiresCassandraKeyspace("10.40.11.235", 9042, "interact");
+		return new RequiresCassandraKeyspace("104.40.156.209", 9042, "interact");
 	}
-
 
 	/**
 	 * Setup a version requirement.
