@@ -32,9 +32,9 @@ public class LoginController {
             @RequestParam String password) {
         HttpSession httpSession = request.getSession();
 
-        if ("institution".equals(username)) {
+        if ("institution".equalsIgnoreCase(username)) {
             httpSession.setAttribute(USER_ROLE, UserRole.INSTITUTION);
-        } else if ("public".equals(username)) {
+        } else if ("public".equalsIgnoreCase(username)) {
             httpSession.setAttribute(USER_ROLE, UserRole.THIRDPARTY);
         }
 
