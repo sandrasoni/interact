@@ -13,6 +13,14 @@
       "name": "startProcess",
       "date": "01/01/2016",
       "visibility": "public"
+    },
+    {
+      "id": 2,
+      "originating_institution": "Commission",
+      "destination_institution": ["Parliament", "Council"],
+      "name": "expertGroup",
+      "date": "01/03/2016",
+      "visibility": "private"
     }]
   }, {
     "id": 1088103,
