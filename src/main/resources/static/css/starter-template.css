@@ -6,7 +6,7 @@ body{
 
 /*Navigation bar*/
 .navbar-inverse {
-     background: #303F9F;
+     background: #003399;
 }
 
 .navbar-inverse .navbar-nav > .active > a,
@@ -30,6 +30,7 @@ body{
 } 
 
 .navbar-inverse .navbar-nav .open .dropdown-menu> li> a:hover {
+    background-color: #003399;
     color: white;
 }
 
@@ -85,10 +86,11 @@ div.dataTables_wrapper .d-info div.dataTables_info {
 
 /*Search*/
 .search{
-	padding: 20px 0px 20px 0px;
+	padding: 20px 0px 5px 0px;
 }
 
 /*Grid*/
 .grid{
+    padding: 20px 0px 20px 0px;
     display: none;
 }
