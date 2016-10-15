@@ -7,6 +7,7 @@ import eu.interact.repository.PrivateDelegatedActEventRepository;
 import eu.interact.repository.PrivateDeletegatedActRepository;
 import eu.interact.repository.PublicDelegatedActEventRepository;
 import eu.interact.repository.PublicDelegatedActRepository;
+import eu.interact.web.DelegatedActService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,17 +20,20 @@ import java.util.List;
 @RequestMapping(value="/v2/pump")
 public class DataPumpController {
 
-    @Autowired
-    PrivateDeletegatedActRepository privateActRepository;
-
-    @Autowired
-    PublicDelegatedActRepository publicActRepository;
+//    @Autowired
+//    PrivateDeletegatedActRepository privateActRepository;
+//
+//    @Autowired
+//    PublicDelegatedActRepository publicActRepository;
 
     @Autowired
     PrivateDelegatedActEventRepository privateDelegatedActEventRepository;
 
     @Autowired
     PublicDelegatedActEventRepository publicDelegatedActEventRepository;
+
+    @Autowired
+    DelegatedActService privateActRepository;
 
     @RequestMapping(value = "/addRealData")
     public String saveRealData() {
@@ -40,6 +44,7 @@ public class DataPumpController {
     public void saveEvents() {
         PrivateDelegatedAct act1 = buildAct("1", "2015/0308(COD)", "Better services for skills and qualifications (Europass)", Arrays.asList("skills", "employment", "education", "jobs"), true, "directive");
         privateActRepository.save(act1);
+
 
         PrivateDelegatedAct act2 = buildAct("2", "2016/0407(COD)", "Reform of e-Privacy", Arrays.asList("telecommunication", "privacy", "IT", "online service"), true, "directive");
         privateActRepository.save(act2);
@@ -53,10 +58,10 @@ public class DataPumpController {
         PrivateDelegatedAct act5 = buildAct("5", "2015/0903(COD)", "Copyright in the single market", Arrays.asList("single market", "copyright"), true, "directive");
         privateActRepository.save(act5);
 
-        PrivateDelegatedAct act6  = buildAct("6", "2016/3504(RSP)", "Salary increase of EU officials taking part in innovative events", Arrays.asList("salary", "innovation", "EU staff"), true, "agreement");
+        PrivateDelegatedAct act6  = buildAct("6", "2016/3504(RSP)", "Salary increase of EU officials taking part in innovative events", Arrays.asList("salary", "innovation", "EU staff"), false, "agreement");
         privateActRepository.save(act6);
 
-        PrivateDelegatedAct act7  = buildAct("7", "2016/2607(RSP)", "Resolution on freedom of expression in Kazakhstan", Arrays.asList("freedom of expression", "human rights", "Kazakhstan"), true, "resolution");
+        PrivateDelegatedAct act7  = buildAct("7", "2016/2607(RSP)", "Resolution on freedom of expression in Kazakhstan", Arrays.asList("freedom of expression", "human rights", "Kazakhstan"), false, "resolution");
         privateActRepository.save(act7);
 
         PrivateDelegatedActEvent ev1 = buildEvent("1","1", "Commission", Arrays.asList("Commission"), "Internal consultation by expert group", true);
