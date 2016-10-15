@@ -1,0 +1,20 @@
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+div.dataTables_wrapper .d-info div.dataTables_info {
+    float: left;
+    padding-top: 0px;
+}
+
+.d-panel-print {
+    line-height: 34px;
+}
+
+.d-panel-print .dt-buttons {
+    float: right;
+}
