@@ -49,7 +49,7 @@ public class DelegatedActService {
         act.setCreationDate(privateAct.getCreationDate());
         act.setKeywords(privateAct.getKeywords());
         act.setId(privateAct.getId());
-
+        act.setType(privateAct.getType());
         return act;
     }
 
