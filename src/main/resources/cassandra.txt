@@ -1,0 +1,27 @@
+CREATE KEYSPACE IF NOT EXISTS interact
+    WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }
+    AND DURABLE_WRITES = true;
+
+CREATE TABLE IF NOT EXISTS delegated_act_private (
+    id uuid,
+    code text,
+    title text,
+    keywords set<text>,
+    visibility boolean,
+    type text,
+    creation_date timestamp,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS delegated_act_public (
+    id uuid,
+    code text,
+    title text,
+    keywords set<text>,
+    visibility boolean,
+    type text,
+    creation_date timestamp,
+    PRIMARY KEY(id)
+);
+
+
