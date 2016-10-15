@@ -3,6 +3,8 @@ package eu.interact.repository;
 import eu.interact.basic.BasicConfiguration;
 import eu.interact.domain.PrivateDelegatedAct;
 import eu.interact.domain.PrivateDelegatedActEvent;
+import eu.interact.domain.PublicDelegatedAct;
+import eu.interact.domain.PublicDelegatedActEvent;
 import eu.interact.util.RequiresCassandraKeyspace;
 import org.junit.Assert;
 import org.junit.ClassRule;
@@ -16,10 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertThat;
-
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BasicConfiguration.class)
@@ -30,15 +28,22 @@ public class DelegatedActCrudRepositoryTests {
     @ClassRule
     public final static RequiresCassandraKeyspace CASSANDRA_KEYSPACE = RequiresCassandraKeyspace.onLocalhost();
 
-    @Autowired DeletegatedActCrudRepository actCrudRepository;
-    @Autowired DelegatedActEventRepository eventRepository;
+    @Autowired
+    PrivateDeletegatedActCrudRepository privateDeletegatedActCrudRepository;
+    @Autowired
+    PrivateDelegatedActEventRepository privateDelegatedActEventRepository;
+
+    @Autowired
+    PublicDelegatedActRepository publicDelegatedActRepository;
+    @Autowired
+    PublicDelegatedActEventRepository publicDelegatedActEventRepository;
 
     // @Autowired Session session;
 
 
 
     @Test
-    public void testSave() {
+    public void testSavePrivate() {
 
         PrivateDelegatedAct da1 = new PrivateDelegatedAct();
         da1.setId("id1");
@@ -60,13 +65,41 @@ public class DelegatedActCrudRepositoryTests {
 
 
 
-        PrivateDelegatedAct dbAct = actCrudRepository.save(da1);
-        PrivateDelegatedAct ret = actCrudRepository.findOne(da1.getId());
-        Assert.assertNotNull(ret);
+        PrivateDelegatedAct act1 = privateDeletegatedActCrudRepository.save(da1);
+        PrivateDelegatedAct dbAct1 = privateDeletegatedActCrudRepository.findOne(act1.getId());
+        Assert.assertNotNull(dbAct1);
 
-        PrivateDelegatedActEvent event = eventRepository.save(de1);
-        PrivateDelegatedActEvent dbEvent = eventRepository.findOne(event.getId());
-        Assert.assertNotNull(dbEvent);
+        PrivateDelegatedActEvent evt1 = privateDelegatedActEventRepository.save(de1);
+        PrivateDelegatedActEvent dbEvt1 = privateDelegatedActEventRepository.findOne(evt1.getId());
+        Assert.assertNotNull(dbEvt1);
     }
 
+    @Test
+    public void testSavePublic() {
+
+        PublicDelegatedAct da1 = new PublicDelegatedAct();
+        da1.setId("id1");
+        da1.setCode("C1");
+        da1.setTitle("Title1");
+        da1.setType("directive");
+        da1.setKeywords(Arrays.asList("key1", "key2"));
+        da1.setCreationDate(new Date());
+
+        PublicDelegatedActEvent de1 = new PublicDelegatedActEvent();
+        de1.setId("id1");
+        de1.setName("E1");
+        de1.setDelegatedActId("id1");
+        de1.setCreationDate(new Date());
+        de1.setOriginatingInstitution("EU");
+        de1.setDestinationInstitutions(Arrays.asList("EU1", "EU2"));
+
+
+        PublicDelegatedAct act1 = publicDelegatedActRepository.save(da1);
+        PublicDelegatedAct dbAct1 = publicDelegatedActRepository.findOne(da1.getId());
+        Assert.assertNotNull(dbAct1);
+
+        PublicDelegatedActEvent evt1 = publicDelegatedActEventRepository.save(de1);
+        PublicDelegatedActEvent dbEvt1 = publicDelegatedActEventRepository.findOne(evt1.getId());
+        Assert.assertNotNull(dbEvt1);
+    }
 }

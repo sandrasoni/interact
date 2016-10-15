@@ -1,33 +1,29 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package eu.interact.domain;
 
-import java.util.Date;
-import java.util.List;
-
-/**
- *
- * @author Root
- */
 
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
 
-@Table(value = "delegated_act_private")
-public class PrivateDelegatedAct {
+import java.util.Date;
+import java.util.List;
+
+@Table(value = "delegated_act_public")
+public class PublicDelegatedAct {
 
 
-    @PrimaryKey("id") private String id;
-    @Column("code") private String code;
-    @Column("title") private String title;
-    @Column("keywords") private List<String> keywords;
-    @Column("visibility") private boolean visibility;
-    @Column("type") private String type;
-    @Column("creation_date") private Date creationDate;
+    @PrimaryKey("id")
+    private String id;
+    @Column("code")
+    private String code;
+    @Column("title")
+    private String title;
+    @Column("keywords")
+    private List<String> keywords;
+    @Column("type")
+    private String type;
+    @Column("creation_date")
+    private Date creationDate;
 
     //private List<PrivateDelegatedActEvent> events;
 
@@ -61,14 +57,6 @@ public class PrivateDelegatedAct {
 
     public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
-    }
-
-    public boolean isVisibility() {
-        return visibility;
-    }
-
-    public void setVisibility(boolean visibility) {
-        this.visibility = visibility;
     }
 
     public String getType() {

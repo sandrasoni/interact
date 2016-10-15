@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 
 
-public interface DeletegatedActCrudRepository extends CrudRepository<PrivateDelegatedAct, String> {
+public interface PrivateDeletegatedActCrudRepository extends CrudRepository<PrivateDelegatedAct, String> {
 }
