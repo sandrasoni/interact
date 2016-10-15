@@ -60,14 +60,14 @@ public class InterActClientV2Test {
 
     @Test
     public void createEvent() {
-        final String uri = serverRoot + "acts/add";
+        final String uri = serverRoot + "acts/add/event";
         String []dummyArray  = new String[] {"act 2 - Carlos", "act 2 - Sebi", "act 2 - Martin", "act 2 - Iulian"};
         String actTypes[] = new String[] { "Directive", "Regulation", "Agreement", "Resolution"};
         String []dummyKeywords  = new String[] {"Council,Agriculture,Technology", "Commision,Prog,Java", "Parliament, Justice, law"};
         String actId = "711c7865-be37-411d-9829-9b4eb5a655df";
         for (int i = 0; i < dummyArray.length-1; i++) {
             boolean visibilty = i % 2 == 0;
-            PrivateDelegatedAct act = getTestActEvent(visibilty, getActType(actTypes), actId); //dummyArray[i], dummyKeywords[i]
+            PrivateDelegatedAct act = getTestActEvent(visibilty, getActType(actTypes), actId, dummyKeywords[i], dummyArray[i]); //dummyArray[i], dummyKeywords[i]
 
             RestTemplate restTemplate = new RestTemplate();
             PrivateDelegatedAct result = restTemplate.postForObject(uri, act, PrivateDelegatedAct.class);
@@ -83,12 +83,16 @@ public class InterActClientV2Test {
         return actTypes[randomNum];
     }
 
-    private PrivateDelegatedAct getTestActEvent(boolean visibilty, String type, String id) {
+    private PrivateDelegatedAct getTestActEvent(boolean visibilty, String type, String id, String keywordParams, String title) {
         PrivateDelegatedAct act = new PrivateDelegatedAct();
         act.setVisibility(visibilty);
         act.setType(type);
         act.setId(id);
-//        act.setKeywords();
+        List<String> keywords = new ArrayList<>(StringUtils.commaDelimitedListToSet(keywordParams));
+        act.setKeywords(keywords);
+
+        act.setCreationDate(new Date());
+        act.setTitle(title);
         return  act;
     }
 }
