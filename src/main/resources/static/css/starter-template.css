@@ -27,7 +27,7 @@ body{
 .navbar-inverse .navbar-nav .open .dropdown-menu {
     background-color: #003399;
     color: white;
-} 
+}
 
 .navbar-inverse .navbar-nav .open .dropdown-menu> li> a:hover {
     background-color: #003399;
@@ -93,4 +93,9 @@ div.dataTables_wrapper .d-info div.dataTables_info {
 .grid{
     padding: 20px 0px 20px 0px;
     display: none;
+}
+
+/*Timeline*/
+.timelineview{
+  display: none;
 }
