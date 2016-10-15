@@ -1,7 +1,12 @@
 package eu.interact.web;
 
 import eu.interact.domain.PrivateDelegatedAct;
+import eu.interact.domain.PrivateDelegatedActEvent;
 import eu.interact.domain.PublicDelegatedAct;
+import eu.interact.domain.PublicDelegatedActEvent;
+import eu.interact.repository.PrivateDelegatedActEventRepository;
+import eu.interact.repository.PrivateDeletegatedActRepository;
+import eu.interact.repository.PublicDelegatedActEventRepository;
 import eu.interact.repository.PrivateDeletegatedActRepository;
 import eu.interact.repository.PublicDelegatedActRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,12 @@ public class DelegatedActService {
 
     @Autowired
     PublicDelegatedActRepository publicActRepository;
+
+    @Autowired
+    PrivateDelegatedActEventRepository privateEventRepository;
+
+    @Autowired
+    PublicDelegatedActEventRepository publicEventRepository;
 
     public PrivateDelegatedAct save(PrivateDelegatedAct act) {
 
@@ -49,6 +60,27 @@ public class DelegatedActService {
         return result;
     }
 
+    public PublicDelegatedAct getPublicByActId(String actId) {
+        PublicDelegatedAct act = publicActRepository.findOne(actId);
+
+        List<PublicDelegatedActEvent> result = publicEventRepository.findByActId(actId);
+
+//        if(result != null) {
+//            act.setEvents(result);
+//        }
+
+        //result.addAll( makeCollection(publicActRepository.findAll()));
+
+        return act;
+    }
+
+    public List<PrivateDelegatedAct> getPrivateById() {
+        List<PrivateDelegatedAct> result = new ArrayList<PrivateDelegatedAct>();
+        result.addAll( makeCollection(privateActRepository.findAll()));
+
+        return result;
+    }
+
     public List<PublicDelegatedAct> getAllPublic() {
         List<PublicDelegatedAct> result = new ArrayList<PublicDelegatedAct>();
         result.addAll( makeCollection(publicActRepository.findAll()));
@@ -62,6 +94,21 @@ public class DelegatedActService {
             list.add(item);
         }
         return list;
+    }
+
+    public PrivateDelegatedActEvent save(PrivateDelegatedActEvent act) {
+        PrivateDelegatedActEvent privateEvent = privateEventRepository.save(act);
+        if(privateEvent.isVisibility()) {
+            publicEventRepository.save(convertEvent(privateEvent));
+        }
+
+        return privateEvent;
+    }
+
+    private PublicDelegatedActEvent convertEvent(PrivateDelegatedActEvent privateEvent) {
+        PublicDelegatedActEvent publicEvent = new PublicDelegatedActEvent();
+
+        return null;
     }
 
     //@Autowired

@@ -18,6 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 import java.util.*;
 
 /**
@@ -59,6 +63,13 @@ public class DelegatedActController2 {
         return savedAct;
     }
 
+    @RequestMapping(value = "/add/event", method = RequestMethod.POST)
+    public PrivateDelegatedActEvent saveEvent(@RequestBody PrivateDelegatedActEvent act) {
+        PrivateDelegatedActEvent savedAct =  actService.save(act);
+
+        return savedAct;
+    }
+
     @RequestMapping(value = "/private/list")
     public List<PrivateDelegatedAct> listPrivate() {
 
@@ -82,6 +93,14 @@ public class DelegatedActController2 {
             }
         }
         return userActs;
+    }
+
+    public static <E> Collection<E> makeCollection(Iterable<E> iter) {
+        Collection<E> list = new ArrayList<E>();
+        for (E item : iter) {
+            list.add(item);
+        }
+        return list;
     }
 
     @RequestMapping(value = "/addRealData")
@@ -147,4 +166,5 @@ public class DelegatedActController2 {
         event.setCreationDate(new Date());
         return event;
     }
+
 }

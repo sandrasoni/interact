@@ -1,6 +1,7 @@
 package eu.interact.domain;
 
 
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
@@ -25,7 +26,8 @@ public class PublicDelegatedAct {
     @Column("creation_date")
     private Date creationDate;
 
-    //private List<PrivateDelegatedActEvent> events;
+
+
 
     public String getId() {
         return id;
