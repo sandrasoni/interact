@@ -1,6 +1,70 @@
-body {
-  padding-top: 50px;
+
+body{
+    padding:50px 0px 0px 0px;
+    z-index:0;
 }
+
+/*Navigation bar*/
+.navbar-inverse {
+     background: #303F9F;
+}
+
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+    color: white;
+    background: #003399;
+}
+
+.navbar-inverse .navbar-nav > .open > a,
+ .navbar-inverse .navbar-nav > .open > a:hover,
+ .navbar-inverse .navbar-nav > .open > a:focus {
+    color: white;
+    background: #003399;
+}
+
+.navbar-inverse .navbar-nav .open .dropdown-menu> li> a,
+.navbar-inverse .navbar-nav .open .dropdown-menu {
+    background-color: #003399;
+    color: white;
+} 
+
+.navbar-inverse .navbar-nav .open .dropdown-menu> li> a:hover {
+    color: white;
+}
+
+/*Navigation bar*/
+.jumbotron {
+    padding:70px 30px 70px 30px;
+    margin:0px auto;
+    background: #0065A2 ;
+    color: white;
+}
+
+/*modal*/
+.loginBox{
+	 margin-top:50px;
+}
+
+/*rows*/
+.row-header{
+    margin:0px auto;
+    padding:0px auto;
+}
+
+.row-content {
+    margin:0px auto;
+    padding: 50px 0px 50px 0px;
+    border-bottom: 1px ridge;
+    min-height:400px;
+}
+
+.row-footer{
+    background-color: #AfAfAf;
+    margin:0px auto;
+    padding: 20px 0px 20px 0px;
+}
+
 .starter-template {
   padding: 40px 15px;
   text-align: center;
@@ -18,3 +82,9 @@ div.dataTables_wrapper .d-info div.dataTables_info {
 .d-panel-print .dt-buttons {
     float: right;
 }
+
+/*Search*/
+.search{
+	padding: 20px 0px 20px 0px;
+}
+
