@@ -1,0 +1,1 @@
+pscp C:\Multimedia\Projects\interact\target\application-0.0.1-SNAPSHOT.jar

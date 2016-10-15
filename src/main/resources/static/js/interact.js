@@ -18,4 +18,17 @@ $(document).ready(function () {
         addRow(acts[index]);
     }
     
+    $('#btn-login').bind("click", function() {
+        $.ajax({
+            type: "POST",
+            url: "/login",
+            data: {
+                username: $('#login-username').val(),
+                password: $('#login-password').val()
+            },
+            success: function() {
+                window.location.href = "/";
+            }
+        });
+    })
 });
