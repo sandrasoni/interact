@@ -82,7 +82,7 @@ $(document).ready(function () {
         $(document).scrollTop($("#grid").offset().top);
     });
 
-    var url = "http://104.40.156.209:8080/v2/acts/private/list";
+    var url = "http://104.40.156.209:8080/v2/acts/public/list";
     if (USERROLE==='INSTITUTION') {
         url = "http://104.40.156.209:8080/v2/acts/private/list";
     }
