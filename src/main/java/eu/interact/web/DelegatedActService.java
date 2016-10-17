@@ -20,16 +20,16 @@ import java.util.List;
 public class DelegatedActService {
 
     @Autowired
-    PrivateDeletegatedActRepository privateActRepository;
+    private PrivateDeletegatedActRepository privateActRepository;
 
     @Autowired
-    PublicDelegatedActRepository publicActRepository;
+    private PublicDelegatedActRepository publicActRepository;
 
     @Autowired
-    PrivateDelegatedActEventRepository privateEventRepository;
+    private PrivateDelegatedActEventRepository privateEventRepository;
 
     @Autowired
-    PublicDelegatedActEventRepository publicEventRepository;
+    private PublicDelegatedActEventRepository publicEventRepository;
 
     public PrivateDelegatedAct save(PrivateDelegatedAct act) {
 
@@ -54,7 +54,7 @@ public class DelegatedActService {
     }
 
     public List<PrivateDelegatedAct> getAllPrivate() {
-        List<PrivateDelegatedAct> result = new ArrayList<PrivateDelegatedAct>();
+        List<PrivateDelegatedAct> result = new ArrayList<>();
         result.addAll( makeCollection(privateActRepository.findAll()));
 
         return result;
@@ -75,21 +75,21 @@ public class DelegatedActService {
     }
 
     public List<PrivateDelegatedAct> getPrivateById() {
-        List<PrivateDelegatedAct> result = new ArrayList<PrivateDelegatedAct>();
+        List<PrivateDelegatedAct> result = new ArrayList<>();
         result.addAll( makeCollection(privateActRepository.findAll()));
 
         return result;
     }
 
     public List<PublicDelegatedAct> getAllPublic() {
-        List<PublicDelegatedAct> result = new ArrayList<PublicDelegatedAct>();
+        List<PublicDelegatedAct> result = new ArrayList<>();
         result.addAll( makeCollection(publicActRepository.findAll()));
 
         return result;
     }
 
-    public static <E> Collection<E> makeCollection(Iterable<E> iter) {
-        Collection<E> list = new ArrayList<E>();
+    private static <E> Collection<E> makeCollection(Iterable<E> iter) {
+        Collection<E> list = new ArrayList<>();
         for (E item : iter) {
             list.add(item);
         }
@@ -107,8 +107,25 @@ public class DelegatedActService {
 
     private PublicDelegatedActEvent convertEvent(PrivateDelegatedActEvent privateEvent) {
         PublicDelegatedActEvent publicEvent = new PublicDelegatedActEvent();
+        publicEvent.setDelegatedActId(privateEvent.getDelegatedActId());
+        publicEvent.setId(privateEvent.getId()); //new event id?!
+        publicEvent.setOriginatingInstitution(privateEvent.getOriginatingInstitution());
+        publicEvent.setCreationDate(privateEvent.getCreationDate());
+        publicEvent.setName(privateEvent.getName());
+        publicEvent.setDestinationInstitutions(privateEvent.getDestinationInstitutions());
+        publicEvent.setKeywords(privateEvent.getKeywords()); //TODO update delegated Act keywords
 
-        return null;
+        return publicEvent;
+    }
+
+    public List<PrivateDelegatedActEvent> getPrivateActEvents(String actId) {
+        List<PrivateDelegatedActEvent> actEvents = privateEventRepository.findByActId(actId);
+        return new ArrayList<>(makeCollection(actEvents));
+    }
+
+    public List<PublicDelegatedActEvent> getPublicActEvents(String actId) {
+        List<PublicDelegatedActEvent> actEvents = publicEventRepository.findByActId(actId);
+        return new ArrayList<>(makeCollection(actEvents));
     }
 
     //@Autowired

@@ -14,6 +14,7 @@ import eu.interact.repository.PrivateDeletegatedActRepository;
 import eu.interact.repository.PublicDelegatedActEventRepository;
 import eu.interact.repository.PublicDelegatedActRepository;
 import eu.interact.web.DelegatedActService;
+import eu.interact.web.model.PrivateDelegatedActDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,10 +34,12 @@ import java.util.*;
 public class DelegatedActController2 {
 
     @Autowired
-    DelegatedActService actService;
+    private DelegatedActService actService;
+
+
     //@Autowired
     //DelegatedActRepository actsRepository;
-    List<DelegatedAct2> userActs = new ArrayList<DelegatedAct2>();
+    private List<DelegatedAct2> userActs = new ArrayList<DelegatedAct2>();
     //private static final Logger logger = LogManager.getLogger(DelegatedActController.class);
     //static final Logger LOG = LoggerFactory.getLogger(MyClassName.class)
 
@@ -54,15 +57,24 @@ public class DelegatedActController2 {
 
     @RequestMapping(value = "/add/event", method = RequestMethod.POST)
     public PrivateDelegatedActEvent saveEvent(@RequestBody PrivateDelegatedActEvent act) {
-        PrivateDelegatedActEvent savedAct =  actService.save(act);
+        PrivateDelegatedActEvent savedActEvent =  actService.save(act);
 
-        return savedAct;
+        return savedActEvent;
     }
 
     @RequestMapping(value = "/private/list")
-    public List<PrivateDelegatedAct> listPrivate() {
+    public List<PrivateDelegatedActDTO> listPrivate() {
 
-        return actService.getAllPrivate();
+        List<PrivateDelegatedAct> acts = actService.getAllPrivate();
+        List<PrivateDelegatedActDTO> dtos = new ArrayList<>();
+        for (PrivateDelegatedAct act: acts) {
+            PrivateDelegatedActDTO dto = new PrivateDelegatedActDTO(act);
+            // dto.setEvents(actService.getPrivateActEvents(act.getId()));
+
+            dtos.add(dto);
+        }
+
+        return dtos;
     }
 
     @RequestMapping(value = "/public/list")
@@ -71,9 +83,9 @@ public class DelegatedActController2 {
     }
 
     @RequestMapping(value="/private/search")
-    public List<DelegatedAct2> search(@RequestParam(defaultValue = "") String text) {
-        List<DelegatedAct2> result = new ArrayList<DelegatedAct2>();
-        for (DelegatedAct2 userAct: userActs) {
+    public List<PrivateDelegatedAct> search(@RequestParam(defaultValue = "") String text) {
+        List<PrivateDelegatedAct> result = new ArrayList<>();
+        for (PrivateDelegatedAct userAct: actService.getAllPrivate()) {
             if(userAct.getKeywords().contains(text.toLowerCase())) {
                 result.add(userAct);
             }
@@ -81,11 +93,11 @@ public class DelegatedActController2 {
                 result.add(userAct);
             }
         }
-        return userActs;
+        return result;
     }
 
     public static <E> Collection<E> makeCollection(Iterable<E> iter) {
-        Collection<E> list = new ArrayList<E>();
+        Collection<E> list = new ArrayList<>();
         for (E item : iter) {
             list.add(item);
         }

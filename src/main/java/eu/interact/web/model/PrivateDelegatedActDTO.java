@@ -7,6 +7,7 @@ package eu.interact.web.model;
 
 import eu.interact.domain.PrivateDelegatedAct;
 import eu.interact.domain.PrivateDelegatedActEvent;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
@@ -15,6 +16,10 @@ import java.util.Date;
 import java.util.List;
 
 public class PrivateDelegatedActDTO extends PrivateDelegatedAct {
+
+    public PrivateDelegatedActDTO(PrivateDelegatedAct src) {
+        BeanUtils.copyProperties(src, this);
+    }
 
     public List<PrivateDelegatedActEvent> getEvents() {
         return events;

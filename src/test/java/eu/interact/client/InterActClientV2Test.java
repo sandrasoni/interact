@@ -1,21 +1,22 @@
 package eu.interact.client;
 
 import eu.interact.domain.PrivateDelegatedAct;
+import eu.interact.domain.PrivateDelegatedActEvent;
 import org.junit.Test;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
-/**
- * Created by martin_mac on 15/10/16.
- */
 public class InterActClientV2Test {
 
-    String serverRoot = "http://localhost:8080/v2/";
+    private String serverRoot = "http://localhost:8080/v2/";
     private static PrivateDelegatedAct testAct;
 
-    public PrivateDelegatedAct getTestAct(String title, String keywordParams) {
+    //test data
+    private String[] eventDestinations = new String[] {"Parliament", "Council", "Commission"};
+
+    private PrivateDelegatedAct getTestAct(String title, String keywordParams) {
         PrivateDelegatedAct default2 = new PrivateDelegatedAct();
         default2.setCode("1");
         default2.setTitle(title);
@@ -62,37 +63,43 @@ public class InterActClientV2Test {
     public void createEvent() {
         final String uri = serverRoot + "acts/add/event";
         String []dummyArray  = new String[] {"act 2 - Carlos", "act 2 - Sebi", "act 2 - Martin", "act 2 - Iulian"};
-        String actTypes[] = new String[] { "Directive", "Regulation", "Agreement", "Resolution"};
+        //String actTypes[] = new String[] { "Directive", "Regulation", "Agreement", "Resolution"};
         String []dummyKeywords  = new String[] {"Council,Agriculture,Technology", "Commision,Prog,Java", "Parliament, Justice, law"};
-        String actId = "711c7865-be37-411d-9829-9b4eb5a655df";
+        String actId = "2";
+        //int i= 0;
         for (int i = 0; i < dummyArray.length-1; i++) {
             boolean visibilty = i % 2 == 0;
-            PrivateDelegatedAct act = getTestActEvent(visibilty, getActType(actTypes), actId, dummyKeywords[i], dummyArray[i]); //dummyArray[i], dummyKeywords[i]
+            PrivateDelegatedActEvent act = getTestActEvent(visibilty, "DECIDE event " + i, actId, dummyKeywords[i], dummyArray[i]); //dummyArray[i], dummyKeywords[i]
 
             RestTemplate restTemplate = new RestTemplate();
-            PrivateDelegatedAct result = restTemplate.postForObject(uri, act, PrivateDelegatedAct.class);
+            PrivateDelegatedActEvent result = restTemplate.postForObject(uri, act, PrivateDelegatedActEvent.class);
 
             System.out.println(result);
         }
     }
 
     private String getActType(String[] actTypes) {
-        int minimum = 0;
-        int maximum = actTypes.length-1;
-        int randomNum = minimum + (int)(Math.random() * maximum);
-        return actTypes[randomNum];
+
+        return actTypes[getRand(0, actTypes.length-1)];
     }
 
-    private PrivateDelegatedAct getTestActEvent(boolean visibilty, String type, String id, String keywordParams, String title) {
-        PrivateDelegatedAct act = new PrivateDelegatedAct();
-        act.setVisibility(visibilty);
-        act.setType(type);
-        act.setId(id);
-        List<String> keywords = new ArrayList<>(StringUtils.commaDelimitedListToSet(keywordParams));
-        act.setKeywords(keywords);
+    private int getRand(int min, int max) {
+        int randomNum = min + (int)(Math.random() * max);
 
-        act.setCreationDate(new Date());
-        act.setTitle(title);
-        return  act;
+        return  randomNum;
+    }
+
+    private PrivateDelegatedActEvent getTestActEvent(boolean visibilty, String name, String actId, String keywordParams, String title) {
+        PrivateDelegatedActEvent actEvent = new PrivateDelegatedActEvent();
+        actEvent.setVisibility(visibilty);
+        //act.setType(type);
+        actEvent.setId(UUID.randomUUID().toString());
+        actEvent.setDelegatedActId(actId);
+        List<String> keywords = new ArrayList<>(StringUtils.commaDelimitedListToSet(keywordParams));
+        actEvent.setKeywords(keywords);
+        actEvent.setName(name);
+        actEvent.setCreationDate(new Date());
+        actEvent.setDestinationInstitutions(Collections.singletonList(eventDestinations[getRand(0, 3)]));
+        return  actEvent;
     }
 }

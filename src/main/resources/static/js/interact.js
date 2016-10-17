@@ -7,6 +7,13 @@ var USERROLE = 'NONE';
 
 var liveData = true;
 
+var buildAppUrl = function(relativePath) {
+
+    var url = window.location.href; // http://104.40.156.209:8080 - localhost..
+
+    return url + relativePath;
+}
+
 function addRow(act){
     console.log(act);
     var grid = $("#example");
@@ -43,7 +50,8 @@ $(document).ready(function () {
 
     $.ajax({
             type: "GET",
-            url: "http://104.40.156.209:8080/user",
+            //url: "http://104.40.156.209:8080/user",
+            url: buildAppUrl("/user"),
             async : false,
             success: function(data) {
                 if (data === 'INSTITUTION') {
@@ -63,7 +71,8 @@ $(document).ready(function () {
                     $('#loginLinkDetails').append('<a id="linkDetailLogout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>');
                     $('#linkDetailLogout').bind("click", function(event) {
                         $.ajax({
-                            url: "http://104.40.156.209:8080/logout",
+                            //url: "http://104.40.156.209:8080/logout",
+                            url: buildAppUrl("/logout"),
                             success: function() {
                                 window.location.href = "/";
                             }
@@ -82,9 +91,9 @@ $(document).ready(function () {
         $(document).scrollTop($("#grid").offset().top);
     });
 
-    var url = "http://104.40.156.209:8080/v2/acts/public/list";
+    var url = buildAppUrl("/v2/acts/public/list");
     if (USERROLE==='INSTITUTION') {
-        url = "http://104.40.156.209:8080/v2/acts/private/list";
+        url =  buildAppUrl("/v2/acts/private/list");
     }
 
     if(liveData){
