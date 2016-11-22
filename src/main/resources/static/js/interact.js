@@ -15,7 +15,6 @@ var buildAppUrl = function(relativePath) {
 }
 
 function addRow(act){
-    console.log(act);
     var grid = $("#example");
     var newRow = "<tr class='rowAction' data-value='"+act["id"]+"'><td>"+act["code"]+"</td><td>"+act["title"]+"</td><td>"+act["type"]+"</td><td>"+act["keywords"]+"</td></tr>";
     $('#example > tbody').append(newRow);
@@ -44,6 +43,16 @@ function drawTimeline(actId){
     }
 
     $('#timelineContainer').append('<span class="timeline-label"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span></span>');
+}
+
+/**
+ * Called when the user presses enter on the search box, or on the search loupe button
+ */
+function submitSearch() {
+    $("#grid").show();
+    $("html").animate({
+        scrollTop: $("#grid").position().top
+    }, 600);
 }
 
 $(document).ready(function () {
@@ -86,9 +95,14 @@ $(document).ready(function () {
         });
 
     //show grid and populate
+    $('#searchField').keypress(function(e) {
+        if (e.which == '13') {
+            submitSearch();
+        }
+    });
+
     $("#searchButton").bind("click", function(){
-        $("#grid").show();
-        $(document).scrollTop($("#grid").offset().top);
+        submitSearch();
     });
 
     var url = buildAppUrl("/v2/acts/public/list");
