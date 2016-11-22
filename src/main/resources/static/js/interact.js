@@ -16,7 +16,7 @@ var buildAppUrl = function(relativePath) {
 
 function addRow(act){
     var grid = $("#example");
-    var newRow = "<tr class='rowAction' data-value='"+act["id"]+"'><td>"+act["code"]+"</td><td>"+act["title"]+"</td><td>"+act["type"]+"</td><td>"+act["keywords"]+"</td></tr>";
+    var newRow = "<tr class='rowAction' data-value='" + act["id"] + "'><td>" + act["code"] + "</td><td>" + act["title"] + "</td><td>" + act["type"] + "</td><td>" + act["keywords"] + "</td></tr>";
     $('#example > tbody').append(newRow);
 };
 
@@ -114,8 +114,7 @@ $(document).ready(function () {
       //get data from server http://10.40.11.237:8080/v2/acts/private/list    http://10.40.11.240:8080/v2/acts/private/list
       $.getJSON( url, function( data ) {
 
-
-        $("#table").append('<div class="table-responsive" ><table id="example" class="table table-striped table-responsive display responsive nowrap" width="100%" cellspacing="0"><thead><tr><th data-priority="1">Code</th><th data-priority="2">Title</th><th data-priority="3">Type</th><th data-priority="4">Keywords</th></tr></thead><tbody></tbody></table></div>');
+        $("#table").append('<div class="table-responsive"><table id="example" class="table table-striped table-responsive table-hover display responsive nowrap" width="100%" cellspacing="0"><thead><tr><th data-priority="1">Code</th><th data-priority="2">Title</th><th data-priority="3">Type</th><th data-priority="4">Keywords</th></tr></thead><tbody></tbody></table></div>');
 
           for (var index in data) {
               addRow(data[index]);
