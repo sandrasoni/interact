@@ -34,9 +34,11 @@ function drawTimeline(actId){
       htmlString = '<span class="timeline-label"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"> </span></span>';
       $('#timelineContainer').append(htmlString);
         htmlString = '<div class="timeline-item timeline-item-arrow-sm"><span class="timeline-label"></span><div class="timeline-event timeline-event-primary"><div class="panel panel-default"><div class="panel-heading"><div class="panel-title"> <h6>';
-        htmlString += events[index].date+'</h6><h3>ACT: '+actName+' | Name: '+events[index].name+'</h3></div>';
-        htmlString += '</div></div><div class="panel-body"><span class="glyphicon glyphicon-envelope" aria-hidden="true">';
-        htmlString += events[index].originating_institution+'</span> <span class="glyphicon glyphicon-play" aria-hidden="true">'+events[index].destination_institution.join()+'</span>';
+        htmlString += events[index].date+'</h6><h4>ACT: '+actName+' | Name: '+events[index].name+'</h4></div>';
+        htmlString += '</div></div><div class="panel-body"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> ';
+        htmlString += events[index].originating_institution;
+        htmlString += ' <span class="glyphicon glyphicon-play" aria-hidden="true"></span> ';
+        htmlString += events[index].destination_institution.join();
         htmlString += '</div></div></div>';
         $('#timelineContainer').append(htmlString);
 
@@ -137,8 +139,7 @@ $(document).ready(function () {
           //show timeline and populate
           $(".rowAction").bind("click", function(){
             var actId = $(this).attr("data-value");
-            $("#timeline").show();
-            $(document).scrollTop($("#timeline").offset().top);
+            $('#timelineModal').modal('show');
             drawTimeline(actId);
           });
 
