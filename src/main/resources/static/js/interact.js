@@ -136,12 +136,19 @@ $(document).ready(function () {
           $('.d-panel-print').append(table.buttons().container());
           $('.d-panel-print').append('<div style="clear: both"></div>');
 
-          //show timeline and populate
-          $(".rowAction").bind("click", function(){
-            var actId = $(this).attr("data-value");
-            $('#timelineModal').modal('show');
-            drawTimeline(actId);
-          });
+            var isClick = 0;
+            //show timeline and populate
+            $(".rowAction").click(function() {
+                if (isClick == 1) {
+                    var actId = $(this).attr("data-value");
+                    $('#timelineModal').modal('show');
+                    drawTimeline(actId);
+                }
+            }).mousedown(function () {
+                isClick = 1;
+            }).mousemove(function () {
+                isClick = 0;
+            });
 
        });
 
