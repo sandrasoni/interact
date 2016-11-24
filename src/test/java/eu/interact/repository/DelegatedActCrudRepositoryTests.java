@@ -1,10 +1,7 @@
 package eu.interact.repository;
 
 import eu.interact.basic.BasicConfiguration;
-import eu.interact.domain.PrivateDelegatedAct;
-import eu.interact.domain.PrivateDelegatedActEvent;
-import eu.interact.domain.PublicDelegatedAct;
-import eu.interact.domain.PublicDelegatedActEvent;
+import eu.interact.domain.*;
 import eu.interact.util.RequiresCassandraKeyspace;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
@@ -38,6 +35,9 @@ public class DelegatedActCrudRepositoryTests {
     @Autowired
     PublicDelegatedActEventRepository publicDelegatedActEventRepository;
 
+    @Autowired
+    PrivateDelegatedActEventByActIdRepository privateDelegatedActEventByActIdRepository;
+
     // @Autowired Session session;
 
 
@@ -62,8 +62,6 @@ public class DelegatedActCrudRepositoryTests {
         de1.setOriginatingInstitution("EU");
         de1.setDestinationInstitutions(Arrays.asList("EU1", "EU2"));
         de1.setVisibility(true);
-
-
 
         PrivateDelegatedAct act1 = privateDeletegatedActCrudRepository.save(da1);
         PrivateDelegatedAct dbAct1 = privateDeletegatedActCrudRepository.findOne(act1.getId());
@@ -93,6 +91,9 @@ public class DelegatedActCrudRepositoryTests {
         de1.setOriginatingInstitution("EU");
         de1.setDestinationInstitutions(Arrays.asList("EU1", "EU2"));
 
+        PrivateDelegatedActEventByActId delegatedActEventByActId = new PrivateDelegatedActEventByActId();
+        delegatedActEventByActId.setId(da1.getId());
+        delegatedActEventByActId.setDeledatedActId(de1.getId());
 
         PublicDelegatedAct act1 = publicDelegatedActRepository.save(da1);
         PublicDelegatedAct dbAct1 = publicDelegatedActRepository.findOne(da1.getId());
@@ -101,6 +102,10 @@ public class DelegatedActCrudRepositoryTests {
         PublicDelegatedActEvent evt1 = publicDelegatedActEventRepository.save(de1);
         PublicDelegatedActEvent dbEvt1 = publicDelegatedActEventRepository.findOne(evt1.getId());
         Assert.assertNotNull(dbEvt1);
+
+        privateDelegatedActEventByActIdRepository.save(delegatedActEventByActId);
+        PrivateDelegatedActEventByActId dbObj = privateDelegatedActEventByActIdRepository.findOne(delegatedActEventByActId.getId());
+        Assert.assertNotNull(dbObj);
     }
 
     @Test

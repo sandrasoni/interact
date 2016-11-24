@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS delegated_act_event_private (
     PRIMARY KEY(id)
 );
 
-CREATE TABLE IF NOT EXISTS delegated_act_event_private (
+CREATE TABLE IF NOT EXISTS delegated_act_event_public (
     id text,
     delegated_act_id text,
     originating_institution text,
@@ -44,4 +44,10 @@ CREATE TABLE IF NOT EXISTS delegated_act_event_private (
     name text,
     creation_date timestamp,
     PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS delegated_act_event_private_by_delegated_act_id (
+    id text,
+    delegated_act_id text,
+    PRIMARY KEY(id, delegated_act_id)
 );

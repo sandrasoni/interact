@@ -4,14 +4,22 @@ package eu.interact.web.endpoint2;
 import eu.interact.domain.PrivateDelegatedAct;
 import eu.interact.domain.PrivateDelegatedActEvent;
 import eu.interact.repository.PrivateDelegatedActEventRepository;
-import eu.interact.repository.PrivateDeletegatedActRepository;
 import eu.interact.repository.PublicDelegatedActEventRepository;
-import eu.interact.repository.PublicDelegatedActRepository;
 import eu.interact.web.DelegatedActService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +34,12 @@ public class DataPumpController {
 //    @Autowired
 //    PublicDelegatedActRepository publicActRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(DataPumpController.class);
+
+    private static final String COMMA = ";";
+
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy");
+
     @Autowired
     PrivateDelegatedActEventRepository privateDelegatedActEventRepository;
 
@@ -35,6 +49,9 @@ public class DataPumpController {
     @Autowired
     DelegatedActService privateActRepository;
 
+    @Autowired
+    ResourceLoader resourceLoader;
+
     @RequestMapping(value = "/addRealData")
     public String saveRealData() {
         saveEvents();
@@ -42,39 +59,41 @@ public class DataPumpController {
     }
 
     public void saveEvents() {
-        PrivateDelegatedAct act1 = buildAct("1", "2015/0308(COD)", "Better services for skills and qualifications (Europass)", Arrays.asList("skills", "employment", "education", "jobs"), true, "directive");
-        privateActRepository.save(act1);
 
+        Resource actResource = resourceLoader.getResource("classpath:data_1.csv");
+        File actFile = null;
 
-        PrivateDelegatedAct act2 = buildAct("2", "2016/0407(COD)", "Reform of e-Privacy", Arrays.asList("telecommunication", "privacy", "IT", "online service"), true, "directive");
-        privateActRepository.save(act2);
+        Resource eventResource = resourceLoader.getResource("classpath:data_2.csv");
+        File eventFile = null;
 
-        PrivateDelegatedAct act3 = buildAct("3", "2016/1234(COD)", "Roaming legislation", Arrays.asList("telecommunication", "roaming", "single market", "consumers"), true, "directive");
-        privateActRepository.save(act3);
+        try {
+            actFile = actResource.getFile();
+            eventFile = eventResource.getFile();
+        } catch (IOException e) {
+            logger.error("Error loading actResource file", e);
+        }
 
-        PrivateDelegatedAct act4 = buildAct("4", "2016/1234(COD)", "Roaming legislation", Arrays.asList("telecommunication", "roaming", "single market", "consumers"), true, "regulation");
-        privateActRepository.save(act4);
+        String line = "";
+        try (BufferedReader br = new BufferedReader(new FileReader(actFile))) {
+            br.readLine(); // skip header
+            while ((line = br.readLine()) != null) {
+                String[] actData = line.split(COMMA);
+                PrivateDelegatedAct act = buildAct( actData[0],actData[1], actData[2], Arrays.asList(actData[3].split(",")), true, actData[4]);
+                privateActRepository.save(act);
+            }
 
-        PrivateDelegatedAct act5 = buildAct("5", "2015/0903(COD)", "Copyright in the single market", Arrays.asList("single market", "copyright"), true, "directive");
-        privateActRepository.save(act5);
+            try (BufferedReader br2 = new BufferedReader(new FileReader(eventFile))) {
+                br2.readLine(); // skip header
+                while ((line = br2.readLine()) != null) {
+                    String[] eventData = line.split(COMMA);
+                    PrivateDelegatedActEvent ev1 = buildEvent(eventData[0],eventData[1], eventData[2], Arrays.asList(eventData[3]), eventData[4], eventData[5], eventData[6].equals("public"));
+                    privateDelegatedActEventRepository.save(ev1);
+                }
+            }
 
-        PrivateDelegatedAct act6  = buildAct("6", "2016/3504(RSP)", "Salary increase of EU officials taking part in innovative events", Arrays.asList("salary", "innovation", "EU staff"), false, "agreement");
-        privateActRepository.save(act6);
-
-        PrivateDelegatedAct act7  = buildAct("7", "2016/2607(RSP)", "Resolution on freedom of expression in Kazakhstan", Arrays.asList("freedom of expression", "human rights", "Kazakhstan"), false, "resolution");
-        privateActRepository.save(act7);
-
-        PrivateDelegatedActEvent ev1 = buildEvent("1","1", "Commission", Arrays.asList("Commission"), "Internal consultation by expert group", true);
-        privateDelegatedActEventRepository.save(ev1);
-
-        PrivateDelegatedActEvent ev2 = buildEvent("2","1", "Commission", Arrays.asList("Commission"), "Legislative proposal published", false);
-        privateDelegatedActEventRepository.save(ev2);
-
-        PrivateDelegatedActEvent ev3 = buildEvent("3","1", "Commission", Arrays.asList("Parliament"), "Submitted to Parliament", true);
-        privateDelegatedActEventRepository.save(ev3);
-
-        PrivateDelegatedActEvent ev4 = buildEvent("4","1", "Commission", Arrays.asList("Council"), "Submitted to Council", true);
-        privateDelegatedActEventRepository.save(ev4);
+        } catch (IOException e) {
+            logger.error("Error saving private act", e);
+        }
     }
 
     private PrivateDelegatedAct buildAct(String id, String code, String title, List<String> keywords, boolean visibility, String type) {
@@ -85,10 +104,11 @@ public class DataPumpController {
         privateAct.setKeywords(keywords);
         privateAct.setVisibility(visibility);
         privateAct.setType(type);
+        privateAct.setCreationDate(new Date());
         return privateAct;
     }
 
-    private PrivateDelegatedActEvent buildEvent(String eventId, String actId, String originatingInstitution, List<String> destinationInstitution, String name, boolean visibility) {
+    private PrivateDelegatedActEvent buildEvent(String eventId, String actId, String originatingInstitution, List<String> destinationInstitution, String name, String date, boolean visibility) {
         PrivateDelegatedActEvent event = new PrivateDelegatedActEvent();
         event.setId(eventId);
         event.setDelegatedActId(actId);
@@ -96,7 +116,16 @@ public class DataPumpController {
         event.setDestinationInstitutions(destinationInstitution);
         event.setName(name);
         event.setVisibility(visibility);
-        event.setCreationDate(new Date());
+
+        Date d = new Date();
+        try {
+            d = sdf.parse(date);
+        }
+        catch (ParseException e) {
+           logger.error("Could not parse date " + date, e);
+        }
+
+        event.setCreationDate(d);
         return event;
     }
 }
