@@ -99,3 +99,8 @@ div.dataTables_wrapper .d-info div.dataTables_info {
 .timelineview{
   display: none;
 }
+
+.delegatedActCode {
+    border-bottom: 1px dotted black;
+    cursor: pointer;
+}

@@ -16,7 +16,7 @@ var buildAppUrl = function(relativePath) {
 
 function addRow(act){
     var grid = $("#example");
-    var newRow = "<tr class='rowAction' data-value='" + act["id"] + "'><td>" + act["code"] + "</td><td>" + act["title"] + "</td><td>" + act["type"] + "</td><td>" + act["keywords"] + "</td></tr>";
+    var newRow = "<tr data-value='" + act["id"] + "'><td><span class='delegatedActCode'>" + act["code"] + "</span></td><td>" + act["title"] + "</td><td>" + act["type"] + "</td><td>" + act["keywords"] + "</td></tr>";
     $('#example > tbody').append(newRow);
 };
 
@@ -138,7 +138,7 @@ $(document).ready(function () {
 
             var isClick = 0;
             //show timeline and populate
-            $(".rowAction").click(function() {
+            $(".delegatedActCode").click(function() {
                 if (isClick == 1) {
                     var actId = $(this).attr("data-value");
                     $('#timelineModal').modal('show');
