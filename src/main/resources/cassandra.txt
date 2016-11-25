@@ -2,6 +2,8 @@ CREATE KEYSPACE IF NOT EXISTS interact
     WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }
     AND DURABLE_WRITES = true;
 
+USE INTERACT;
+
 CREATE TABLE IF NOT EXISTS delegated_act_private (
     id text,
     code text,

@@ -18,6 +18,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -61,20 +63,20 @@ public class DataPumpController {
     public void saveEvents() {
 
         Resource actResource = resourceLoader.getResource("classpath:data_1.csv");
-        File actFile = null;
-
         Resource eventResource = resourceLoader.getResource("classpath:data_2.csv");
-        File eventFile = null;
 
+        InputStream actFile = null;
+        InputStream eventFile = null;
+        
         try {
-            actFile = actResource.getFile();
-            eventFile = eventResource.getFile();
+            actFile = actResource.getInputStream();
+            eventFile = eventResource.getInputStream();
         } catch (IOException e) {
             logger.error("Error loading actResource file", e);
         }
 
         String line = "";
-        try (BufferedReader br = new BufferedReader(new FileReader(actFile))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(actFile))) {
             br.readLine(); // skip header
             while ((line = br.readLine()) != null) {
                 String[] actData = line.split(COMMA);
@@ -82,7 +84,7 @@ public class DataPumpController {
                 privateActRepository.save(act);
             }
 
-            try (BufferedReader br2 = new BufferedReader(new FileReader(eventFile))) {
+            try (BufferedReader br2 = new BufferedReader(new InputStreamReader(eventFile))) {
                 br2.readLine(); // skip header
                 while ((line = br2.readLine()) != null) {
                     String[] eventData = line.split(COMMA);
