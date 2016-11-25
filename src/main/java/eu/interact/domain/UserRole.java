@@ -10,6 +10,10 @@ package eu.interact.domain;
  * @author Root
  */
 public enum UserRole {
+    // Logged in as Institution
     INSTITUTION,
-    THIRDPARTY
+    // Logged in as Public
+    THIRDPARTY,
+    // Not Logged In
+    ANONYMOUS
 }

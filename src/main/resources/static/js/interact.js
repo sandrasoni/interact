@@ -9,9 +9,12 @@ var liveData = true;
 
 var buildAppUrl = function(relativePath) {
 
-    var url = window.location.href; // http://104.40.156.209:8080 - localhost..
-
-    return url + relativePath;
+    var wref = window.location.href; // http://104.40.156.209:8080 - localhost..
+    var url = wref + relativePath;
+    
+    var cleanUrl = url.replace(/([^:]\/)\/+/g, "$1"); // remove double slashes.
+    
+    return cleanUrl;
 }
 
 function addRow(act){
@@ -60,41 +63,41 @@ function submitSearch() {
 $(document).ready(function () {
 
     $.ajax({
-            type: "GET",
-            //url: "http://104.40.156.209:8080/user",
-            url: buildAppUrl("/user"),
-            async : false,
-            success: function(data) {
-                if (data === 'INSTITUTION') {
-                    $('#loginLinkDetails').empty();
-                    $('#loginLinkDetails').append('<a id="linkDetailLogout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>');
-                    $('#linkDetailLogout').bind("click", function(event) {
-                        $.ajax({
-                            url: "/logout",
-                            success: function() {
-                                window.location.href = "/";
-                            }
-                        });
+        type: "GET",
+        url: buildAppUrl("/user"),
+        async : false,
+        dataType: "json",
+        success: function(data) {
+            if (data === 'INSTITUTION') {
+                $('#loginLinkDetails').empty();
+                $('#loginLinkDetails').append('<a id="linkDetailLogout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>');
+                $('#linkDetailLogout').bind("click", function(event) {
+                    $.ajax({
+                        url: "/logout",
+                        success: function() {
+                            window.location.href = "/";
+                        }
                     });
-                    USERROLE = 'INSTITUTION';
-                } else if (data === 'THIRDPARTY') {
-                    $('#loginLinkDetails').empty();
-                    $('#loginLinkDetails').append('<a id="linkDetailLogout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>');
-                    $('#linkDetailLogout').bind("click", function(event) {
-                        $.ajax({
-                            //url: "http://104.40.156.209:8080/logout",
-                            url: buildAppUrl("/logout"),
-                            success: function() {
-                                window.location.href = "/";
-                            }
-                        });
+                });
+                USERROLE = 'INSTITUTION';
+            } else if (data === 'THIRDPARTY') {
+                $('#loginLinkDetails').empty();
+                $('#loginLinkDetails').append('<a id="linkDetailLogout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>');
+                $('#linkDetailLogout').bind("click", function(event) {
+                    $.ajax({
+                        //url: "http://104.40.156.209:8080/logout",
+                        url: buildAppUrl("/logout"),
+                        success: function() {
+                            window.location.href = "/";
+                        }
                     });
-                    USERROLE = 'THIRDPARTY';
-                } else {
-                    USERROLE = 'NONE';
-                }
+                });
+                USERROLE = 'THIRDPARTY';
+            } else {
+                USERROLE = 'NONE';
             }
-        });
+        }
+    });
 
     //show grid and populate
     $('#searchField').keypress(function(e) {

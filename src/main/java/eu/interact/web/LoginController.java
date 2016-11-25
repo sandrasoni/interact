@@ -9,11 +9,11 @@ import eu.interact.domain.UserRole;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -26,7 +26,8 @@ public class LoginController {
 
     public static String USER_ROLE = "user.role";
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @POST
+    @RequestMapping(value = "/login")
     public String doLogin(HttpServletRequest request, @RequestParam String username,
             @RequestParam String password) {
         HttpSession httpSession = request.getSession();
@@ -45,7 +46,11 @@ public class LoginController {
     @Produces(MediaType.APPLICATION_JSON)
     public @ResponseBody UserRole user(HttpServletRequest request) {
         HttpSession httpSession = request.getSession();
-        UserRole role = (UserRole)httpSession.getAttribute(USER_ROLE);
+        UserRole role = (UserRole) httpSession.getAttribute(USER_ROLE);
+        
+        if (role == null) {
+            role = UserRole.ANONYMOUS;
+        }
         
         return role;
     }
