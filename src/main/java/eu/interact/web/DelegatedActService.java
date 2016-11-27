@@ -34,8 +34,7 @@ public class DelegatedActService {
     public PrivateDelegatedAct save(PrivateDelegatedAct act) {
 
         PrivateDelegatedAct savedAct =  privateActRepository.save(act);
-        if(savedAct.isVisibility()) { // true - public
-            //TODO savein private repo
+        if(savedAct.isVisibility()) { // true - public - save in public
             publicActRepository.save(convert(savedAct));
         }
         return savedAct;
