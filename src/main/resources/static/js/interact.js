@@ -7,6 +7,10 @@ var USERROLE = 'NONE';
 var liveData = true;
 var stompClient = null;
 
+var eventTranslations = {
+    startProcess: 'Start Process',
+    actPlanned: 'Act Planned'
+}
 
 var buildAppUrl = function(relativePath) {
 
@@ -26,41 +30,65 @@ function addRow(act){
 
 function drawTimeline(actId){
 
+    $('#timelineContainer').empty();
+
     var actTimeline = actDetailJsonformatPublic["act"][0];
-    if (USERROLE==='INSTITUTION') {
+    if (USERROLE === 'INSTITUTION') {
         actTimeline = actDetailJsonformatPrivate["act"][0];
     }
 
     var events = actTimeline.event;
-    var actName =actTimeline.title;
+    var actName = actTimeline.title;
+    
     var htmlString = '';
     for (var index in events){
-      htmlString = '<span class="timeline-label"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"> </span></span>';
-      $('#timelineContainer').append(htmlString);
+        htmlString = '<span class="timeline-label"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"> </span></span>';
+        $('#timelineContainer').append(htmlString);
+        
         htmlString = '<div class="timeline-item timeline-item-arrow-sm"><span class="timeline-label"></span><div class="timeline-event timeline-event-primary"><div class="panel panel-default"><div class="panel-heading"><div class="panel-title"> <h6>';
-        htmlString += events[index].date+'</h6><h4>ACT: '+actName+' | Name: '+events[index].name+'</h4></div>';
+        htmlString += events[index].date+'</h6><h4>ACT: '+actName+' | Name: ' + eventTranslations[events[index].name] +'</h4></div>';
         htmlString += '</div></div><div class="panel-body"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> ';
         htmlString += events[index].originating_institution;
         htmlString += ' <span class="glyphicon glyphicon-play" aria-hidden="true"></span> ';
         htmlString += events[index].destination_institution.join();
         htmlString += '</div></div></div>';
         $('#timelineContainer').append(htmlString);
-
     }
 
     $('#timelineContainer').append('<span class="timeline-label"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span></span>');
+    
+    connect();
+}
+
+function refreshTimeline(event) {
+    
+    console.log(event);
+    
+    // Create a new JavaScript Date object based on the timestamp
+    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    var dateJS = new Date(event.creationDate);
+    var date = dateJS.getDate() + '/' + dateJS.getMonth() + '/' + dateJS.getFullYear();
+    htmlString = '<span class="timeline-label"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"> </span></span>';
+    $('#timelineContainer').append(htmlString);
+    
+    htmlString = '<div class="timeline-item timeline-item-arrow-sm"><span class="timeline-label"></span><div class="timeline-event timeline-event-primary"><div class="panel panel-default"><div class="panel-heading"><div class="panel-title"> <h6>';
+    htmlString += date + '</h6><h4>ACT: This is the act 1 | Name: ' + eventTranslations[event.name] + '</h4></div>';
+    htmlString += '</div></div><div class="panel-body"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> ';
+    htmlString += event.originatingInstitution;
+    htmlString += ' <span class="glyphicon glyphicon-play" aria-hidden="true"></span> ';
+    htmlString += event.destinationInstitutions.join();
+    htmlString += '</div></div></div>';
+    $('#timelineContainer').append(htmlString);
 }
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
-        $("#conversation").show();
+        console.log("connected");
+    } else {
+        console.log("not connected");
     }
-    else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
 }
 
 function connect() {
@@ -69,8 +97,9 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
+        stompClient.subscribe('/topic/events', function (greeting) {
+            // console.log(JSON.parse(greeting.body).content);
+            refreshTimeline(JSON.parse(greeting.body));
         });
     });
 }
@@ -81,14 +110,6 @@ function disconnect() {
     }
     setConnected(false);
     console.log("Disconnected");
-}
-
-function sendName() {
-    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
-}
-
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
 }
 
 /**
@@ -193,6 +214,10 @@ $(document).ready(function () {
             }).mousemove(function () {
                 isClick = 0;
             });
+            
+            $('#timelineModal').on('hidden.bs.modal', function () {
+                disconnect();
+            })
 
         });
 
@@ -231,6 +256,4 @@ $(document).ready(function () {
             });
         })
     }
-    
-    connect();
 });

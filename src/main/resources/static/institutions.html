@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>InterAct! - The European Union Inter-Institutional Registry of Legislative Acts</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="css/bootstrap-theme.css" rel="stylesheet">
+
+        <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/responsive.dataTables.css">
+        <link rel="stylesheet" type="text/css" href="css/responsive.bootstrap.css">
+
+        <link rel="stylesheet" type="text/css" href="css/timeline.min.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+
+        <!-- Custom styles for this template -->
+        <link rel="stylesheet" type="text/css" href="css/starter-template.css"/>
+        
+        <style>
+            /* CSS used here will be applied after bootstrap.css */
+            .thumbnail_container {
+                 position: relative;
+                 width: 100%;
+                 padding-bottom: 100%;
+                 margin-bottom:20px;
+            }
+
+            .thumbnail {
+                position:absolute;
+                width:100%;
+                height:100%;
+            }
+            
+            .thumbnail img {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+            
+            .fakeLink {
+                cursor: pointer;
+            }
+            
+            body > .container {
+                padding-top: 40px;
+                background-color: white;
+            }
+            
+              /*
+               * Responsive stypes
+               */
+            @media (max-width: 980px) {
+
+                body > .container {
+                  padding-top: 10;
+                }
+                
+                .navbar-fixed-top {
+                  margin-bottom: 10;
+                }
+
+            } /* END: @media (max-width: 980px) */
+
+        </style>
+        
+    </head>
+
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#"><img src="img/ecLogo.png" height=30 width=41></a>
+                    <a class="navbar-brand" href="#"><img src="img/councilLogo.png" height=30 width=41></a>
+                    <a class="navbar-brand" href="#"><img src="img/epLogo.png" height=30 width=41></a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a id="loginLink">
+                                <li id="loginLinkDetails"><a data-toggle="modal" data-target="#loginModal">
+                                <span class="glyphicon glyphicon-log-in"></span> Login</a>
+                                </li>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <header class="jumbotron">
+            <div class="container">
+                <div class="row row-header">
+                    <div class="col-sm-7">
+                        <h1>InterAct!</h1>
+                        <p style="padding:10px;"></p>
+                        <p>Events Simulator</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- http://13.95.22.121:8080/v2/pump/addRealData -->
+        
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-sm-4 ecLogoHandle">
+                    <div class="thumbnail_container fakeLink">
+                        <div class="thumbnail">
+                            <img class="img-responsive" src="img/ecLogo.png" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 councilLogoHandle">
+                    <div class="thumbnail_container fakeLink">
+                        <div class="thumbnail">
+                            <img class="img-responsive" src="img/councilLogo.png" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 epLogoHandle">
+                    <div class="thumbnail_container fakeLink">
+                        <div class="thumbnail">
+                            <img class="img-responsive" src="img/epLogo.png" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>         
+        </div>
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="js/jquery/jquery-3.1.1.js"></script>
+        <script src="js/bootstrap/bootstrap.js"></script>
+
+        <script src="js/datatables/jquery.dataTables.js"></script>
+        <script src="js/datatables/dataTables.bootstrap.js"></script>
+        <script src="js/datatables/dataTables.buttons.js"></script>
+
+        <script src="js/datatables/buttons.html5.js"></script>
+        <script src="js/datatables/buttons.bootstrap.js"></script>
+        <script src="js/datatables/buttons.print.js"></script>
+
+        <script src="js/datatables/dataTables.responsive.js"></script>
+        <script src="js/datatables/responsive.bootstrap.js"></script>
+        
+        <script type="text/javascript">
+            
+            function triggerEvent(institution) {
+                $.ajax({
+                    url: '/trigger/' + institution,
+                }).done(function() {
+                    
+                });
+            }
+            
+            $(document).ready(function () {
+                $('.ecLogoHandle').click(function() {
+                    triggerEvent('Commission');
+                });
+                $('.councilLogoHandle').click(function() {
+                    triggerEvent('Council');
+                });
+                $('.epLogoHandle').click(function() {
+                    triggerEvent('Parliament');
+                });
+            });
+        </script>
+    </body>
+</html>
