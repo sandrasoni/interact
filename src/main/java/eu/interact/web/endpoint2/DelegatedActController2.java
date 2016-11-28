@@ -16,6 +16,7 @@ import eu.interact.repository.PublicDelegatedActRepository;
 import eu.interact.web.DelegatedActService;
 import eu.interact.web.model.PrivateDelegatedActDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -63,18 +64,19 @@ public class DelegatedActController2 {
     }
 
     @RequestMapping(value = "/private/list")
-    public List<PrivateDelegatedActDTO> listPrivate() {
+    public List<PrivateDelegatedAct> listPrivate() {
 
         List<PrivateDelegatedAct> acts = actService.getAllPrivate();
-        List<PrivateDelegatedActDTO> dtos = new ArrayList<>();
-        for (PrivateDelegatedAct act: acts) {
+        return acts;
+        //List<PrivateDelegatedActDTO> dtos = new ArrayList<>();
+        /*for (PrivateDelegatedAct act: acts) {
             PrivateDelegatedActDTO dto = new PrivateDelegatedActDTO(act);
             // dto.setEvents(actService.getPrivateActEvents(act.getId()));
 
             dtos.add(dto);
         }
 
-        return dtos;
+        return dtos;*/
     }
 
     @RequestMapping(value = "/public/list")
@@ -83,12 +85,44 @@ public class DelegatedActController2 {
     }
 
     @RequestMapping(value="/private/search")
-    public List<PrivateDelegatedAct> search(@RequestParam(defaultValue = "") String text) {
-        List<PrivateDelegatedAct> result = new ArrayList<>();
+    public Collection<PrivateDelegatedAct> search(@RequestParam(defaultValue = "") String text) {
+        if(StringUtils.isEmpty(text)) {
+            return listPrivate();
+        }
+        Set<PrivateDelegatedAct> result = new TreeSet<PrivateDelegatedAct>();
         for (PrivateDelegatedAct userAct: actService.getAllPrivate()) {
-            if(userAct.getKeywords().contains(text.toLowerCase())) {
+            /*if(userAct.getKeywords().contains(text.toLowerCase())) {
+                result.add(userAct);
+            }*/
+            for(String keyword: userAct.getKeywords()){
+                if(keyword.toLowerCase().contains(text.toLowerCase())) {
+                    result.add(userAct);
+                }
+            }
+
+            if(userAct.getTitle().toLowerCase().contains(text.toLowerCase())) {
                 result.add(userAct);
             }
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/public/search")
+    public Collection<PublicDelegatedAct> searchPublic(@RequestParam(defaultValue = "") String text) {
+        Set<PublicDelegatedAct> result = new TreeSet<PublicDelegatedAct>();
+        if(StringUtils.isEmpty(text)) {
+            return listPublic();
+        }
+        for (PublicDelegatedAct userAct: actService.getAllPublic()) {
+            /*if(userAct.getKeywords().contains(text.toLowerCase())) {
+                result.add(userAct);
+            }*/
+            for(String keyword: userAct.getKeywords()){
+                if(keyword.toLowerCase().contains(text.toLowerCase())) {
+                    result.add(userAct);
+                }
+            }
+
             if(userAct.getTitle().contains(text.toLowerCase())) {
                 result.add(userAct);
             }
@@ -97,7 +131,7 @@ public class DelegatedActController2 {
     }
 
     public static <E> Collection<E> makeCollection(Iterable<E> iter) {
-        Collection<E> list = new ArrayList<>();
+        Collection<E> list = new ArrayList<E>();
         for (E item : iter) {
             list.add(item);
         }

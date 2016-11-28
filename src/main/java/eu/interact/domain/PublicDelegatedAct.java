@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Table(value = "delegated_act_public")
-public class PublicDelegatedAct {
+public class PublicDelegatedAct implements Comparable<PublicDelegatedAct>{
 
 
     @PrimaryKey("id")
@@ -26,8 +26,21 @@ public class PublicDelegatedAct {
     @Column("creation_date")
     private Date creationDate;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        PublicDelegatedAct that = (PublicDelegatedAct) o;
 
+        return id.equals(that.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 
     public String getId() {
         return id;
@@ -75,5 +88,10 @@ public class PublicDelegatedAct {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Override
+    public int compareTo(PublicDelegatedAct o) {
+        return getId().compareTo(o.getId());
     }
 }

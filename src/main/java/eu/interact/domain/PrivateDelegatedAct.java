@@ -18,7 +18,7 @@ import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
 
 @Table(value = "delegated_act_private")
-public class PrivateDelegatedAct {
+public class PrivateDelegatedAct implements Comparable<PrivateDelegatedAct>{
 
 
     @PrimaryKey("id") private String id;
@@ -29,6 +29,21 @@ public class PrivateDelegatedAct {
     @Column("type") private String type;
     @Column("creation_date") private Date creationDate;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PrivateDelegatedAct that = (PrivateDelegatedAct) o;
+
+        return id != null ? id.equals(that.id) : that.id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
     //private List<PrivateDelegatedActEvent> events;
 
     public String getId() {
@@ -85,5 +100,10 @@ public class PrivateDelegatedAct {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Override
+    public int compareTo(PrivateDelegatedAct o) {
+        return  getId().compareTo(o.getId());
     }
 }

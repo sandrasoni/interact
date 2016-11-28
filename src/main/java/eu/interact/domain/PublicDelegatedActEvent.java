@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Table(value = "delegated_act_event_public")
-public class PublicDelegatedActEvent {
+public class PublicDelegatedActEvent implements Comparable {
 
     @PrimaryKey("id") String id;
     @Column("delegated_act_id") String delegatedActId;
@@ -73,5 +73,13 @@ public class PublicDelegatedActEvent {
 
     public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if(o instanceof PublicDelegatedActEvent) {
+            return delegatedActId.compareTo(((PublicDelegatedActEvent) o).getDelegatedActId());
+        }
+        return -1;
     }
 }
