@@ -4,8 +4,9 @@ var actDetailJsonformatPrivate = JSON.parse('{"act":[{"id":1088102,"code":"1","t
 var actDetailJsonformatPublic = JSON.parse('{"act":[{"id":1088102,"code":"1","title":"This is the act 1","keywords":["Agriculture","Spain"],"visibility":"public","type":"directive","event":[{"id":1,"originating_institution":"Commission","destination_institution":["Parliament","Council"],"name":"startProcess","date":"01/01/2016","visibility":"public"}]}]}');
 
 var USERROLE = 'NONE';
-
 var liveData = true;
+var stompClient = null;
+
 
 var buildAppUrl = function(relativePath) {
 
@@ -48,6 +49,46 @@ function drawTimeline(actId){
     }
 
     $('#timelineContainer').append('<span class="timeline-label"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span></span>');
+}
+
+function setConnected(connected) {
+    $("#connect").prop("disabled", connected);
+    $("#disconnect").prop("disabled", !connected);
+    if (connected) {
+        $("#conversation").show();
+    }
+    else {
+        $("#conversation").hide();
+    }
+    $("#greetings").html("");
+}
+
+function connect() {
+    var socket = new SockJS('/delegatedacts');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        setConnected(true);
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/greetings', function (greeting) {
+            showGreeting(JSON.parse(greeting.body).content);
+        });
+    });
+}
+
+function disconnect() {
+    if (stompClient != null) {
+        stompClient.disconnect();
+    }
+    setConnected(false);
+    console.log("Disconnected");
+}
+
+function sendName() {
+    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
+}
+
+function showGreeting(message) {
+    $("#greetings").append("<tr><td>" + message + "</td></tr>");
 }
 
 /**
@@ -115,29 +156,29 @@ $(document).ready(function () {
         url =  buildAppUrl("/v2/acts/private/list");
     }
 
-    if(liveData){
-      //get data from server http://10.40.11.237:8080/v2/acts/private/list    http://10.40.11.240:8080/v2/acts/private/list
-      $.getJSON( url, function( data ) {
+    if (liveData) {
+        //get data from server http://10.40.11.237:8080/v2/acts/private/list    http://10.40.11.240:8080/v2/acts/private/list
+        $.getJSON( url, function( data ) {
 
-        $("#table").append('<div class="table-responsive"><table id="example" class="table table-striped table-responsive table-hover display responsive nowrap" width="100%" cellspacing="0"><thead><tr><th data-priority="1">Code</th><th data-priority="2">Title</th><th data-priority="3">Type</th><th data-priority="4">Keywords</th></tr></thead><tbody></tbody></table></div>');
+            $("#table").append('<div class="table-responsive"><table id="example" class="table table-striped table-responsive table-hover display responsive nowrap" width="100%" cellspacing="0"><thead><tr><th data-priority="1">Code</th><th data-priority="2">Title</th><th data-priority="3">Type</th><th data-priority="4">Keywords</th></tr></thead><tbody></tbody></table></div>');
 
-          for (var index in data) {
-              addRow(data[index]);
-          }
+            for (var index in data) {
+                addRow(data[index]);
+            }
 
-          var table = $('#example').DataTable({
-              //dom: 'lBfrtip',
-              //dom: 'Blf<t><"d-info"i>p',
-              responsive: true,
-              buttons: [
-                  'copyHtml5',
-                  'excelHtml5',
-                  'csvHtml5',
-                  'pdfHtml5'
-              ]
-          });
-          $('.d-panel-print').append(table.buttons().container());
-          $('.d-panel-print').append('<div style="clear: both"></div>');
+            var table = $('#example').DataTable({
+                //dom: 'lBfrtip',
+                //dom: 'Blf<t><"d-info"i>p',
+                responsive: true,
+                buttons: [
+                    'copyHtml5',
+                    'excelHtml5',
+                    'csvHtml5',
+                    'pdfHtml5'
+                ]
+            });
+            $('.d-panel-print').append(table.buttons().container());
+            $('.d-panel-print').append('<div style="clear: both"></div>');
 
             var isClick = 0;
             //show timeline and populate
@@ -153,41 +194,43 @@ $(document).ready(function () {
                 isClick = 0;
             });
 
-       });
+        });
 
-       $('#btn-login').bind("click", function() {
-           $.ajax({
-               type: "POST",
-               url: "/login",
-               data: {
-                   username: $('#login-username').val(),
-                   password: $('#login-password').val()
-               },
-               success: function() {
-                   window.location.href = "/";
-               }
-           });
-       })
+        $('#btn-login').bind("click", function() {
+            $.ajax({
+                type: "POST",
+                url: "/login",
+                data: {
+                    username: $('#login-username').val(),
+                    password: $('#login-password').val()
+                },
+                success: function() {
+                    window.location.href = "/";
+                }
+            });
+        })
 
-     } else {
-      var acts = actJsonformat["act"];
+    } else {
+        var acts = actJsonformat["act"];
 
-       for (var index in acts) {
-           addRow(acts[index]);
-       }
+        for (var index in acts) {
+            addRow(acts[index]);
+        }
 
-       $('#btn-login').bind("click", function() {
-           $.ajax({
-               type: "POST",
-               url: "/login",
-               data: {
-                   username: $('#login-username').val(),
-                   password: $('#login-password').val()
-               },
-               success: function() {
-                   window.location.href = "/";
-               }
-           });
-       })
-     }
+        $('#btn-login').bind("click", function() {
+            $.ajax({
+                type: "POST",
+                url: "/login",
+                data: {
+                    username: $('#login-username').val(),
+                    password: $('#login-password').val()
+                },
+                success: function() {
+                    window.location.href = "/";
+                }
+            });
+        })
+    }
+    
+    connect();
 });
