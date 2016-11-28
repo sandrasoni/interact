@@ -9,7 +9,11 @@ var stompClient = null;
 
 var eventTranslations = {
     startProcess: 'Start Process',
-    actPlanned: 'Act Planned'
+    actPlanned: 'Act Planned',
+    approve: 'Approved',
+    adoption: 'Adopted',
+    plenary: 'Plenary',
+    expertGroup: 'Expert Group'
 }
 
 var buildAppUrl = function(relativePath) {
@@ -43,9 +47,11 @@ function drawTimeline(actId){
     htmlString = '<span class="timeline-label"><span class="label label-info">Start</span></span>';
     $('#timelineContainer').append(htmlString);
 
-    
     var htmlString = '';
     for (var index in events){      
+        
+        console.log(events[index].name);
+        
         htmlString = '<div class="timeline-item"><div class="timeline-point timeline-point-blank"></div><div class="timeline-event timeline-event-primary"><div class="panel panel-default"><div class="panel-heading"><div class="panel-title"> <h6>';
         htmlString += events[index].date+'</h6><h4>ACT: '+actName+' | Name: ' + eventTranslations[events[index].name] +'</h4></div>';
         htmlString += '</div></div><div class="panel-body"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> ';
