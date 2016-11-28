@@ -40,23 +40,22 @@ function drawTimeline(actId){
     var events = actTimeline.event;
     var actName = actTimeline.title;
     
+    htmlString = '<span class="timeline-label"><span class="label label-info">Start</span></span>';
+    $('#timelineContainer').append(htmlString);
+
+    
     var htmlString = '';
-    for (var index in events){
-        htmlString = '<span class="timeline-label"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"> </span></span>';
-        $('#timelineContainer').append(htmlString);
-        
-        htmlString = '<div class="timeline-item timeline-item-arrow-sm"><span class="timeline-label"></span><div class="timeline-event timeline-event-primary"><div class="panel panel-default"><div class="panel-heading"><div class="panel-title"> <h6>';
+    for (var index in events){      
+        htmlString = '<div class="timeline-item"><div class="timeline-point timeline-point-blank"></div><div class="timeline-event timeline-event-primary"><div class="panel panel-default"><div class="panel-heading"><div class="panel-title"> <h6>';
         htmlString += events[index].date+'</h6><h4>ACT: '+actName+' | Name: ' + eventTranslations[events[index].name] +'</h4></div>';
         htmlString += '</div></div><div class="panel-body"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> ';
         htmlString += events[index].originating_institution;
         htmlString += ' <span class="glyphicon glyphicon-play" aria-hidden="true"></span> ';
         htmlString += events[index].destination_institution.join();
         htmlString += '</div></div></div>';
-        $('#timelineContainer').append(htmlString);
+        $('#timelineContainer').prepend(htmlString);
     }
-
-    $('#timelineContainer').append('<span class="timeline-label"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span></span>');
-    
+      
     connect();
 }
 
@@ -68,17 +67,18 @@ function refreshTimeline(event) {
     // multiplied by 1000 so that the argument is in milliseconds, not seconds.
     var dateJS = new Date(event.creationDate);
     var date = dateJS.getDate() + '/' + dateJS.getMonth() + '/' + dateJS.getFullYear();
-    htmlString = '<span class="timeline-label"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"> </span></span>';
-    $('#timelineContainer').append(htmlString);
     
-    htmlString = '<div class="timeline-item timeline-item-arrow-sm"><span class="timeline-label"></span><div class="timeline-event timeline-event-primary"><div class="panel panel-default"><div class="panel-heading"><div class="panel-title"> <h6>';
+    htmlString = '<div style="display: none;" class="timeline-item"><div class="timeline-point timeline-point-blank"></div><div class="timeline-event timeline-event-primary"><div class="panel panel-default"><div class="panel-heading"><div class="panel-title"> <h6>';
     htmlString += date + '</h6><h4>ACT: This is the act 1 | Name: ' + eventTranslations[event.name] + '</h4></div>';
     htmlString += '</div></div><div class="panel-body"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> ';
     htmlString += event.originatingInstitution;
     htmlString += ' <span class="glyphicon glyphicon-play" aria-hidden="true"></span> ';
     htmlString += event.destinationInstitutions.join();
     htmlString += '</div></div></div>';
-    $('#timelineContainer').append(htmlString);
+    
+    $(htmlString).prependTo($('#timelineContainer')).show('slow');
+    
+    //$('#timelineContainer').prepend(htmlString);
 }
 
 function setConnected(connected) {
